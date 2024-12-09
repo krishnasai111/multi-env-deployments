@@ -3,8 +3,8 @@ kind: Deployment
 metadata:
   name: guestbook-ui
 spec:
-  replicas: 1
-  revisionHistoryLimit: 3
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   selector:
     matchLabels:
       app: guestbook-ui
@@ -14,7 +14,7 @@ spec:
         app: guestbook-ui
     spec:
       containers:
-      - image: gcr.io/heptio-images/ks-guestbook-demo:0.2
+      - image: "{{ .Values.image.repository}}:{{ .Values.image.tag}}"
         name: guestbook-ui
         ports:
         - containerPort: 80
@@ -22,12 +22,12 @@ spec:
           httpGet: 
             path: /
             port: 80
-          initialDelaySeconds: 3
-          periodSeconds: 3
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds}}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds}}
         resources:
           requests:
-            cpu: 500m
-            memory: 512Mi
+            cpu: {{ .Values.resources.requests.cpu}}
+            memory: {{ .Values.resources.requests.memory}}
           limits:
-            cpu: 1
-            memory: 1Gi
+            cpu: {{ .Values.resources.limits.cpu}}
+            memory: {{ .Values.resources.limits.memory}}
