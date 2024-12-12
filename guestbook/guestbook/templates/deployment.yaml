@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: guestbook-ui
+spec:
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  selector:
+    matchLabels:
+      app: guestbook-ui
+  template:
+    metadata:
+      labels:
+        app: guestbook-ui
+    spec:
+      containers:
+      - image: "{{ .Values.image.repository}}:{{ .Values.image.tag}}"
+        name: guestbook-ui
+        ports:
+        - containerPort: 80
+        livenessProbe: 
+          httpGet: 
+            path: /
+            port: 80
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds}}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds}}
+        resources:
+          requests:
+            cpu: {{ .Values.resources.requests.cpu}}
+            memory: {{ .Values.resources.requests.memory}}
+          limits:
+            cpu: {{ .Values.resources.limits.cpu}}
+            memory: {{ .Values.resources.limits.memory}}
