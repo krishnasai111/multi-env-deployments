@@ -1,0 +1,25 @@
+service:
+  name: guestbook-ui-svc
+  identifier: guestbookuisvc
+  orgIdentifier: default
+  projectIdentifier: guestbookui
+  serviceDefinition:
+    spec:
+      manifests:
+        - manifest:
+            identifier: guestbook
+            type: K8sManifest
+            spec:
+              store:
+                type: Github
+                spec:
+                  connectorRef: github
+                  gitFetchType: Branch
+                  paths:
+                    - guestbook/guestbook
+                  branch: dev
+              valuesPaths:
+                - values.yaml
+              skipResourceVersioning: false
+              enableDeclarativeRollback: false
+    type: Kubernetes
